@@ -2,17 +2,22 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
   redis:
-    port: 6379
-    host: localhost
+    port: ${PORT}
+    host: ${HOST}
   datasource:
-    url: jdbc:mysql://localhost:3306/token
+    url: ${DBURL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: kang0525@
-    username: root
+    password: ${PASSWORD}
+    username: ${NAME}
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: none
 auth:
   jwt:
-    secret: refreshTokenStudy
+    header: ${HEADER}
+    secret: ${SECRET}
+    exp:
+      access: ${ACCESS}
+      refresh: ${REFRESH}
+
