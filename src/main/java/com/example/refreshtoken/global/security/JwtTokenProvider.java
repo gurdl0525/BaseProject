@@ -1,66 +1,88 @@
 package com.example.refreshtoken.global.security;
 
-import com.example.refreshtoken.domain.entity.redis.Redis;
-import com.example.refreshtoken.domain.entity.redis.RedisRepository;
+import com.example.refreshtoken.global.error.exception.InvalidTokenException;
+import com.example.refreshtoken.global.security.auth.AuthDetails;
 import com.example.refreshtoken.global.security.auth.AuthDetailsService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+    @Value("${jwt.secret}")
+    private String secretKey;
+    @Value("${jwt.header}")
+    private String header;
+    @Value("${jwt.exp.access}")
+    private Long accessTokenExpiration;
+    @Value("${jwt.exp.refresh}")
+    private Long refreshTokenExpiration;
     private final AuthDetailsService authDetailsService;
-    private final RedisRepository redisRepository;
-    public String getBearerToken(HttpServletRequest request){
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken == null){
-            return null;
+    public String generateAccessToken(String id){
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setSubject(id)
+                .claim("type", "access")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .compact();
+    }
+    public String generateRefreshToken(String id){
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setSubject(id)
+                .claim("type", "refresh")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+                .compact();
+    }
+    public String resolveToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(header);
+        if (bearerToken != null){
+            if(bearerToken.length() > 7){
+                return bearerToken.substring(7);
+            } else {
+              throw InvalidTokenException.getInstance();
+            }
         }
-        return bearerToken.substring(7);
+        return null;
+    }
+    public boolean validateToken(String token){
+        try{
+            return getTokenBody(token).getExpiration()
+                    .after(new Date());
+        }catch (Exception e){
+            throw InvalidTokenException.getInstance();
+        }
+    }
+
+    public Authentication authentication(String token){
+        var authDetails = authDetailsService.loadUserByUsername(getUserId(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
     public String getUserId(String token){
         try{
-            return Jwts.parser().setSigningKey("refreshTokenStudy").parseClaimsJws(token).getBody().getSubject();
+            return getTokenBody(token).getSubject();
         }catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw InvalidTokenException.getInstance();
         }
     }
-    private String createToken(String accountId,Long ttl){
-        return Jwts.builder()
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ttl))
-                .setSubject(accountId)
-                .signWith(SignatureAlgorithm.HS256, "refreshTokenStudy")
-                .compact();
+    public String getSigningKey() {
+        return Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
-    public String generateAccessToken(String id){
-        String token = createToken(id, 60L * 5);
-        if(redisRepository.existsById(id)){
-            Redis redis = redisRepository.findById(id).get();
-            redis = Redis.builder()
-                    .id(redis.getId())
-                    .accessToken(token)
-                    .refreshToken(redis.getRefreshToken())
-                    .exp(redis.getExp())
-                    .build();
-        }
-        return token;
-    }
-    public String generateRefreshToken(String id){
-        return createToken(id, 60L * 60 * 2);
-    }
-
-    public Authentication getAuthentication(String token){
-        UserDetails userDetails = authDetailsService.loadUserByUsername(getUserId(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", null);
+    public Claims getTokenBody(String token){
+        return Jwts.parser()
+                .setSigningKey(getSigningKey()).parseClaimsJws(token).getBody();
     }
 }
