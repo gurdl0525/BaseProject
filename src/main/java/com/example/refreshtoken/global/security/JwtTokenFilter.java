@@ -1,7 +1,7 @@
 package com.example.refreshtoken.global.security;
 
+import com.example.refreshtoken.global.error.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,13 +15,17 @@ import java.io.IOException;
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String token = jwtTokenProvider.getBearerToken(request);
-        if(token != null){
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            String token = jwtTokenProvider.resolveToken(request);
+            if(token != null && jwtTokenProvider.validateToken(token)){
+                var auth = jwtTokenProvider.authentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }catch (InvalidTokenException e){
+            SecurityContextHolder.clearContext();
         }
-        filterChain.doFilter(request, response);
+        chain.doFilter(request, response);
     }
 }
