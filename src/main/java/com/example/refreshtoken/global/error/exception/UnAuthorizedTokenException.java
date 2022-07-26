@@ -11,6 +11,6 @@ public class UnAuthorizedTokenException extends BaseException {
         private static final UnAuthorizedTokenException INSTANCE = new UnAuthorizedTokenException();
     }
     public static UnAuthorizedTokenException getInstance(){
-        return UnAuthorizedTokenException.SingletonHelper.INSTANCE;
+        return SingletonHelper.INSTANCE;
     }
 }
