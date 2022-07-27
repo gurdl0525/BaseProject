@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "rf_token")
+@Entity(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
