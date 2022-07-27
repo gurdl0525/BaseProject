@@ -20,13 +20,13 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${jwt.secret}")
+    @Value("${auth.jwt.secret}")
     private String secretKey;
-    @Value("${jwt.header}")
+    @Value("${auth.jwt.header}")
     private String header;
-    @Value("${jwt.exp.access}")
+    @Value("${auth.jwt.exp.access}")
     private Long accessTokenExpiration;
-    @Value("${jwt.exp.refresh}")
+    @Value("${auth.jwt.exp.refresh}")
     private Long refreshTokenExpiration;
     private final AuthDetailsService authDetailsService;
     public String generateAccessToken(String id){
