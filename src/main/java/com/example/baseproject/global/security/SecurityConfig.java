@@ -29,9 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isCorsRequest).permitAll()
                 .antMatchers().authenticated()
-                .antMatchers("/cake").authenticated()
-                .antMatchers("/cake/mine").authenticated()
-                .antMatchers("/cake/candle/**").authenticated()
                 .anyRequest().permitAll()
                 .and().apply(new JwtConfigurer(jwtTokenProvider, exceptionHandlerFilter));
     }
