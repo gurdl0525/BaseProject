@@ -14,19 +14,27 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
+
     private final AuthService authService;
+
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse join(@RequestBody UserRequest request){
         return authService.join(request);
     }
+
     @PostMapping("/login")
     public IssueTokenResponse login(@RequestBody LoginUserRequest request){
         return authService.login(request);
     }
+
     @PostMapping("/re-issue")
     public IssueTokenResponse refresh(@RequestBody ReIssueTokenRequest request){
         return authService.refreshToken(request);
     }
 
+    @PatchMapping("/compilation")
+    public MessageResponse compilation(@RequestBody UserRequest request){
+        return authService.editMember(request);
+    }
 }
