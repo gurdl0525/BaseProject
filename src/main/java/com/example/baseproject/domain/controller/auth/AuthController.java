@@ -1,10 +1,10 @@
-package com.example.baseproject.domain.controller;
+package com.example.baseproject.domain.controller.auth;
 
-import com.example.baseproject.domain.controller.dto.request.LoginUserRequest;
-import com.example.baseproject.domain.controller.dto.request.ReIssueTokenRequest;
-import com.example.baseproject.domain.controller.dto.request.UserRequest;
-import com.example.baseproject.domain.controller.dto.response.IssueTokenResponse;
-import com.example.baseproject.domain.controller.dto.response.MessageResponse;
+import com.example.baseproject.domain.controller.auth.dto.request.LoginUserRequest;
+import com.example.baseproject.domain.controller.auth.dto.request.ReIssueTokenRequest;
+import com.example.baseproject.domain.controller.auth.dto.request.UserRequest;
+import com.example.baseproject.domain.controller.auth.dto.response.IssueTokenResponse;
+import com.example.baseproject.domain.controller.auth.dto.response.MessageResponse;
 import com.example.baseproject.domain.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
