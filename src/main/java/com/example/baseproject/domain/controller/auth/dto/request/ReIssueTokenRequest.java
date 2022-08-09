@@ -1,4 +1,4 @@
-package com.example.baseproject.domain.controller.dto.request;
+package com.example.baseproject.domain.controller.auth.dto.request;
 
 import com.sun.istack.NotNull;
 import lombok.*;

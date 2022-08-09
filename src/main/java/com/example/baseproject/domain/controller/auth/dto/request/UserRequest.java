@@ -1,4 +1,4 @@
-package com.example.baseproject.domain.controller.dto.request;
+package com.example.baseproject.domain.controller.auth.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginUserRequest {
+public class UserRequest {
 
     private String accountId;
 
