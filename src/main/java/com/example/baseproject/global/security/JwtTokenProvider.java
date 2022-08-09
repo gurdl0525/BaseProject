@@ -12,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -27,6 +26,7 @@ public class JwtTokenProvider {
     @Value("${auth.jwt.exp.refresh}")
     private Long refreshTokenExpiration;
     private final AuthDetailsService authDetailsService;
+
     public String generateAccessToken(String id){
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -36,6 +36,7 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .compact();
     }
+
     public String generateRefreshToken(String id){
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secretKey)
@@ -45,6 +46,7 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .compact();
     }
+
     public String resolveToken(HttpServletRequest request){
         String bearerToken = request.getHeader(header);
         if (bearerToken != null){
@@ -56,6 +58,7 @@ public class JwtTokenProvider {
         }
         return null;
     }
+
     public boolean validateToken(String token){
         try{
             return getTokenBody(token).getExpiration()
@@ -69,6 +72,7 @@ public class JwtTokenProvider {
         var authDetails = authDetailsService.loadUserByUsername(getUserId(token));
         return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
+
     public String getUserId(String token){
         try{
             return getTokenBody(token).getSubject();
@@ -76,11 +80,10 @@ public class JwtTokenProvider {
             throw InvalidTokenException.getInstance();
         }
     }
+
     public Claims getTokenBody(String token){
         return Jwts.parser()
-                .setSigningKey(getSigningKey()).parseClaimsJws(token).getBody();
+                .setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
-    public String getSigningKey() {
-        return Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
+
 }
