@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Getter
 @AllArgsConstructor
-@RedisHash(timeToLive = 60 * 60 * 24 * 14)
+@RedisHash(timeToLive = 7200)
 public class RefreshToken {
 
     @Id
