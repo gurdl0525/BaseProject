@@ -2,26 +2,18 @@ package com.example.baseproject.domain.controller.auth;
 
 import com.example.baseproject.domain.controller.auth.dto.request.LoginUserRequest;
 import com.example.baseproject.domain.controller.auth.dto.request.ReIssueTokenRequest;
-import com.example.baseproject.domain.controller.auth.dto.request.UserRequest;
 import com.example.baseproject.domain.controller.auth.dto.response.IssueTokenResponse;
-import com.example.baseproject.domain.controller.auth.dto.response.MessageResponse;
-import com.example.baseproject.domain.service.AuthService;
+import com.example.baseproject.domain.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
-
-    @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponse join(@RequestBody UserRequest request){
-        return authService.join(request);
-    }
 
     @PostMapping("/login")
     public IssueTokenResponse login(@RequestBody LoginUserRequest request){
@@ -31,10 +23,5 @@ public class AuthController {
     @PostMapping("/re-issue")
     public IssueTokenResponse refresh(@RequestBody ReIssueTokenRequest request){
         return authService.refreshToken(request);
-    }
-
-    @PatchMapping("/compilation")
-    public MessageResponse compilation(@RequestBody UserRequest request){
-        return authService.editMember(request);
     }
 }
