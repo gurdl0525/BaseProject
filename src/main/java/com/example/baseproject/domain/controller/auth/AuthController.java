@@ -3,6 +3,7 @@ package com.example.baseproject.domain.controller.auth;
 import com.example.baseproject.domain.controller.auth.dto.request.LoginUserRequest;
 import com.example.baseproject.domain.controller.auth.dto.request.ReIssueTokenRequest;
 import com.example.baseproject.domain.controller.auth.dto.response.IssueTokenResponse;
+import com.example.baseproject.domain.controller.auth.dto.response.ReIssueTokenResponse;
 import com.example.baseproject.domain.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/re-issue")
-    public IssueTokenResponse refresh(@RequestBody ReIssueTokenRequest request){
+    public ReIssueTokenResponse refresh(@RequestBody ReIssueTokenRequest request){
         return authService.refreshToken(request);
     }
 }
