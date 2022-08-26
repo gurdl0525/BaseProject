@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.Id;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RedisHash(timeToLive = 7200)
 public class RefreshToken {
 
