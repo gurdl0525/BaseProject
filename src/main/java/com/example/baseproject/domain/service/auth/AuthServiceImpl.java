@@ -3,6 +3,7 @@ package com.example.baseproject.domain.service.auth;
 import com.example.baseproject.domain.controller.auth.dto.request.LoginUserRequest;
 import com.example.baseproject.domain.controller.auth.dto.request.ReIssueTokenRequest;
 import com.example.baseproject.domain.controller.auth.dto.response.IssueTokenResponse;
+import com.example.baseproject.domain.controller.auth.dto.response.ReIssueTokenResponse;
 import com.example.baseproject.domain.entity.redis.RefreshToken;
 import com.example.baseproject.domain.entity.redis.RefreshTokenRepository;
 import com.example.baseproject.domain.entity.user.User;
@@ -48,13 +49,13 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public IssueTokenResponse refreshToken(ReIssueTokenRequest request){
+    public ReIssueTokenResponse refreshToken(ReIssueTokenRequest request){
         String refreshToken = request.getRefreshToken();
         String userId = jwtTokenProvider.getUserId(refreshToken);
         refreshTokenRepository.findById(userId)
                 .filter(rf ->  rf.getRefreshToken().equals(refreshToken))
                 .orElseThrow(UnAuthorizedTokenException::getInstance);
-        return IssueTokenResponse.builder()
+        return ReIssueTokenResponse.builder()
                 .accessToken(jwtTokenProvider.generateAccessToken(userId))
                 .refreshToken(refreshToken)
                 .build();
