@@ -1,4 +1,4 @@
-package com.example.baseproject.domain.controller.auth.dto.response;
+package com.example.baseproject.domain.controller.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
