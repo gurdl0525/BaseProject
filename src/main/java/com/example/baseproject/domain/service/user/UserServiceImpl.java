@@ -1,6 +1,7 @@
 package com.example.baseproject.domain.service.user;
 
-import com.example.baseproject.domain.controller.user.dto.request.UserRequest;
+import com.example.baseproject.domain.controller.auth.dto.request.LoginUserRequest;
+import com.example.baseproject.domain.controller.user.dto.request.CreateUserRequest;
 import com.example.baseproject.domain.controller.user.dto.response.MessageResponse;
 import com.example.baseproject.domain.entity.user.User;
 import com.example.baseproject.domain.entity.user.UserRepository;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationFacade authenticationFacade;
 
     @Override
-    public MessageResponse join(UserRequest request){
+    public MessageResponse join(CreateUserRequest request){
         userRepository.findByAccountId(request.getAccountId())
                 .ifPresent(user -> {
                     throw DuplicateMemberException.getInstance();
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public MessageResponse editMember(UserRequest request) {
+    public MessageResponse editMember(LoginUserRequest request) {
         User user = authenticationFacade.getCurrentUser();
         userRepository.save(User.builder()
                         .id(user.getId())
