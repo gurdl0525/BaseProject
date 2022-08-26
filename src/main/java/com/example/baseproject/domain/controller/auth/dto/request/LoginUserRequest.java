@@ -1,18 +1,14 @@
 package com.example.baseproject.domain.controller.auth.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class LoginUserRequest {
 
-    private String accountId;
+    private final String accountId;
 
-    private String password;
+    private final String password;
 
 }
