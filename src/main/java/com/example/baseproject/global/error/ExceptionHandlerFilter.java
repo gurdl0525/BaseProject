@@ -14,6 +14,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
+
     public void setErrorResponse(ErrorCode errorCode, HttpServletResponse response, Throwable e){
         response.setStatus(errorCode.getStatus());
         response.setContentType("application/json");
@@ -27,6 +28,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             ex.printStackTrace();
         }
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
