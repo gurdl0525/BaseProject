@@ -1,6 +1,6 @@
 package com.example.baseproject.global.error;
 
-import com.example.baseproject.global.error.exception.UnAuthorizedTokenException;
+import com.example.baseproject.domain.user.auth.exception.UnAuthorizedTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
