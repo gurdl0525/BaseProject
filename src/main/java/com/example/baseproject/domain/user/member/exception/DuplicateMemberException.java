@@ -1,6 +1,6 @@
 package com.example.baseproject.domain.user.member.exception;
 
-import com.example.baseproject.global.error.ErrorCode;
+import com.example.baseproject.global.error.exception.ErrorCode;
 import com.example.baseproject.global.error.exception.BaseException;
 
 public class DuplicateMemberException extends BaseException {

@@ -6,7 +6,7 @@ import com.example.baseproject.global.common.MessageResponse;
 import com.example.baseproject.domain.user.member.entity.User;
 import com.example.baseproject.domain.user.member.entity.UserRepository;
 import com.example.baseproject.domain.user.member.exception.DuplicateMemberException;
-import com.example.baseproject.global.config.security.auth.AuthenticationFacade;
+import com.example.baseproject.global.util.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

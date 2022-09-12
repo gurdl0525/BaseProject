@@ -1,6 +1,5 @@
 package com.example.baseproject.global.error.exception;
 
-import com.example.baseproject.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

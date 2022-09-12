@@ -1,5 +1,7 @@
 package com.example.baseproject.global.error;
 
+import com.example.baseproject.global.error.exception.ErrorCode;
+import com.example.baseproject.global.error.exception.NotFoundException;
 import com.example.baseproject.domain.user.auth.exception.UnAuthorizedTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,13 +18,12 @@ import java.io.IOException;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     public void setErrorResponse(ErrorCode errorCode, HttpServletResponse response, Throwable e){
-        response.setStatus(errorCode.getStatus());
+        response.setStatus(errorCode.getStatus().value());
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getMessage());
         errorResponse.setMessage(e.getMessage());
         try{
             String json = errorResponse.convertObjectToJson();
-            System.out.println(json);
             response.getWriter().write(json);
         } catch (IOException ex){
             ex.printStackTrace();
@@ -34,9 +35,12 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        }catch (UnAuthorizedTokenException e){
-            log.error("exception exception handler filter");
-            setErrorResponse(ErrorCode.UN_AUTHORIZED_TOKEN_EXCEPTION, response, e);
+        } catch (UnAuthorizedTokenException e){
+            log.error("un authorized token exception exception handler filter");
+            setErrorResponse(ErrorCode.UN_AUTHORIZED_TOKEN, response, e);
+        } catch (NotFoundException e) {
+            log.error("not found exception exception handler filter");
+            setErrorResponse(ErrorCode.NOT_FOUND, response, e);
         } catch (RuntimeException e){
             log.error("runtime exception exception handler filter");
             setErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, response, e);
